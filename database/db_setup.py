@@ -14,15 +14,15 @@ client = weaviate.Client(
     }
 )
 
-# Create mail class
+# Create Organisations class
 class_obj = {
-    "class": "Mails",
+    "class": "Organisations",
     "vectorizer": "text2vec-huggingface",
-    "description": "EMail data",
+    "description": "Organisation description",
 
     "moduleConfig": {
         "text2vec-huggingface": {
-            "model": "sentence-transformers/all-MiniLM-L6-v2",
+            "model": "google/muril-large-cased",
             "options": {
                 "waitForModel": True
             }
@@ -31,23 +31,43 @@ class_obj = {
     "properties": [
         {
             "dataType": ["text"],
-            "description": "Mail body",
+            "description": "__id",
+            "name": "__id",
+        },
+        {
+            "dataType": ["text"],
+            "description": "Organisation Code",
+            "name": "orgCode",
+        },
+        {
+            "dataType": ["text"],
+            "description": "Stage",
+            "name": "stage",
+        },
+        {
+            "dataType": ["text"],
+            "description": "Parent id",
+            "name": "parent_id",
+        },
+        {
+            "dataType": ["text"],
+            "description": "English Description",
             "moduleConfig": {
                 "text2vec-huggingface": {
                     "vectorizePropertyName": True
                 }
             },
-            "name": "mailBody",
+            "name": "description",
         },
         {
             "dataType": ["text"],
-            "description": "Mail subject",
-            "name": "mailSubject",
-        },
-        {
-            "dataType": ["text"],
-            "description": "Mail from",
-            "name": "mailFrom",
+            "description": "Hindi Description",
+            "moduleConfig": {
+                "text2vec-huggingface": {
+                    "vectorizePropertyName": True
+                }
+            },
+            "name": "hinDescription",
         },
     ],
     "vectorIndexType": "hnsw",
@@ -55,13 +75,8 @@ class_obj = {
 
 
 client.schema.create_class(class_obj)
-    
-# data = (client.query.get("Mails", ["mailBody", "mailSubject"])
-#         .with_near_text({"concepts": ["Jatin Kshatriya"]})
-#         .with_limit(1)
-#       ).do()
 
-data = (client.query.get("Chat", ["conversation", "chatIndex"])
+data = (client.query.get("Organisations", ["description", "hinDescription"])
         .with_near_text({"concepts": ["Jatin Kshatriya"]})
         .with_limit(1)
         ).do()

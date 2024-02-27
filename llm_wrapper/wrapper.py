@@ -6,6 +6,7 @@ import os
 import pdb
 from langchain.vectorstores.weaviate import Weaviate
 import weaviate
+from prompts.system_prompt import SYSTEM_PROMPT
 
 class LLMWrapper:
     """Wrapper class for the LLM API."""
@@ -16,54 +17,12 @@ class LLMWrapper:
         self.max_try = max_try
         self.history = False
 
-    def _send_request(self, system_prompt="", user_prompt="", vectorstore=None):
+    def _send_request(self, user_prompt="", vectorstore=None):
         for _ in range(self.max_try):
             try:
                 if self.history:
                     batch_size = 5
-                    class_name = "Chat"
-                    class_properties = ["conversation", "chatIndex"]
-                    
-                    query = (
-                        vectorstore.query
-                        .get(class_name, class_properties)
-                        .with_near_text({"concepts": [user_prompt]})
-                        .with_limit(batch_size)
-                    )
-
-                    chat_history = query.do()["data"]["Get"]["Chat"]
-                    chat_history = sorted(chat_history, key=lambda x: x["chatIndex"])
-                    chat_history = [c["conversation"] for c in chat_history]
-
-                    CHAT_HISTORY_PROMPT = [{"role": "system", "content": """You are a smart AI conversation summarizer. 
-                                            Your goal is to summarize the conversation between the user and the AI assistant keeping the context of the conversation."""}, 
-                                           {"role": "user", "content": f"""The following is a conversation with an AI assistant.
-                                            summarize it as a single conversation in following format:
-                                            ----------------
-                                            User: 
-                                            AI: 
-                                            ----------------
-                                            below is the conversation delimited by []:
-                                            {chat_history},
-                                            """}]
-                    print(CHAT_HISTORY_PROMPT, "printing chat history")
-                    chat_summary = response = openai.ChatCompletion.create(
-                        model=self.model,
-                        messages=CHAT_HISTORY_PROMPT,
-                        max_tokens=1000,
-                        temperature=self.temperature,
-                        stream=False,
-                    )
-                    chat_summary = chat_summary.choices[0].message["content"]
-                    print(chat_summary, "printing chat summary")
-
-                    GENERAL_CHAT_PROMPT = [{"role": "system", "content": system_prompt}, 
-                                           {"role": "user", "content": f"""Below is the summary conversation between the user and the AI assistant. 
-                                            Consider this as the context delimited by <> of the conversation and answer the users question.
-                                            <{chat_summary}>
-                                            ----------------
-                                            User: {user_prompt}
-                                            """}]
+                    GENERAL_CHAT_PROMPT = self.history.append({"role": "user", "content": f"{user_prompt}"}) 
                     print(GENERAL_CHAT_PROMPT, "printing general chat prompt")
                     response = openai.ChatCompletion.create(
                         model=self.model,
@@ -74,7 +33,7 @@ class LLMWrapper:
                     )
                     return response 
                 else:
-                    CHAT_PROMPT = [{"role": "system", "content": system_prompt}, {"role": "user", "content": user_prompt}]
+                    CHAT_PROMPT = [{"role": "system", "content": SYSTEM_PROMPT}, {"role": "user", "content": user_prompt}]
                     print(CHAT_PROMPT, "printing chat prompt")
                     response = openai.ChatCompletion.create(
                         model=self.model,
@@ -105,25 +64,9 @@ class LLMWrapper:
         print("Rate limit exceeded. Waiting before retrying...")
         time.sleep(60) 
 
-    def generate_response(self, user_input, vectorstore, k=10):
-        batch_size = k
-        class_name = "Mails"
-        class_properties = ["mailBody", "mailSubject"]
-        query = (
-            vectorstore.query
-            .get(class_name, class_properties)
-            .with_near_text({"concepts": ["Internship applications"]})
-            .with_limit(batch_size)
-        )
-
-        context = query.do()["data"]["Get"]["Mails"]
-
-        SYSTEM_PROMPT = f"""Use following pieces of context to answer the users question, following contexts are summarised texts from users inbox. If question is not relevant to context answer by yourself.
-                    ----------------
-                    {context}""" 
+    def generate_response(self, user_input):
         conversation = user_input
-        response = self._send_request(SYSTEM_PROMPT, conversation, vectorstore)
-        
+        response = self._send_request(conversation)
         return response
 
     def reset_history(self):
@@ -143,7 +86,7 @@ if __name__ == "__main__":
     index = 0
     while True:
         user_input = input("\nUser: ")    
-        response = wrapper.generate_response(user_input, vectrstore, 3)
+        response = wrapper.generate_response(user_input)
 
         response_msg = ""
         for r in response:
