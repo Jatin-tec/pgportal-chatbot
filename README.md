@@ -1,18 +1,3 @@
-# DataSeekr: Personal Data Search Engine
-
-DataSeekr is a powerful search engine application designed to help you efficiently search and explore your personal data, specifically focusing on Gmail. This application utilizes the Weaviate vector database for advanced search capabilities and Streamlit for the user-friendly front-end interface.
-
-![DataSeekr Demo](./static/demo_screenshot.png)
-
-## Drive
-- https://drive.google.com/drive/folders/1AYGInOBWwGGzITHe5g2sIv4fkBpBffpn?usp=sharing
-
-## Key Features
-
-- Seamlessly search and navigate through your Gmail data.
-- Leverage the power of Weaviate's vector-based search technology for accurate and fast results.
-- User-friendly Streamlit interface for an intuitive and enjoyable user experience.
-
 ## Integrating Gmail API and Loading Mails
 
 To fetch and load your Gmail data into DataSeekr, follow these steps:
