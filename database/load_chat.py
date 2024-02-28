@@ -64,10 +64,3 @@ with client.batch as batch:
             data_obj,
             "Organisations",
         )
-
-# Insert the objects into Weaviate using batch functionality
-# try:
-#     response = response = client.batch.create_objects(weaviate_objs)
-#     print("Objects inserted successfully:", response)
-# except Exception as e:
-#     print("Failed to insert objects:", e)

@@ -17,13 +17,6 @@ class_name = "Organisations"
 class_properties = ['__id', 'orgCode', 'description']
 cursor = None
 
-# query = (
-#     client.query.get(class_name, class_properties)
-#     .with_additional(["id vector"])
-#     .with_limit(batch_size)
-# )
-# print(len(query.do()["data"]["Get"]["Mails"]))
-
 query = (
     client.query.get(class_name, class_properties)
     .with_additional(["id vector"])

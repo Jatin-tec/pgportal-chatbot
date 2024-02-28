@@ -1,12 +1,9 @@
 import time
-import requests
 import openai
 import dotenv
 import os
-import pdb
-from langchain.vectorstores.weaviate import Weaviate
 import weaviate
-from prompts.system_prompt import SYSTEM_PROMPT
+from llm_wrapper.prompts.system_prompt import SYSTEM_PROMPT
 
 class LLMWrapper:
     """Wrapper class for the LLM API."""
@@ -15,38 +12,28 @@ class LLMWrapper:
         self.model = model
         self.temperature = temprature
         self.max_try = max_try
-        self.history = False
+        self.history = [
+            {"role": "system", "content": SYSTEM_PROMPT}, 
+        ]
 
     def _send_request(self, user_prompt="", vectorstore=None):
         for _ in range(self.max_try):
             try:
-                if self.history:
-                    batch_size = 5
-                    GENERAL_CHAT_PROMPT = self.history.append({"role": "user", "content": f"{user_prompt}"}) 
-                    print(GENERAL_CHAT_PROMPT, "printing general chat prompt")
-                    response = openai.ChatCompletion.create(
-                        model=self.model,
-                        messages=GENERAL_CHAT_PROMPT,
-                        max_tokens=self.max_tokens,
-                        temperature=self.temperature,
-                        stream=True,
-                    )
-                    return response 
-                else:
-                    CHAT_PROMPT = [{"role": "system", "content": SYSTEM_PROMPT}, {"role": "user", "content": user_prompt}]
-                    print(CHAT_PROMPT, "printing chat prompt")
-                    response = openai.ChatCompletion.create(
-                        model=self.model,
-                        messages=CHAT_PROMPT,
-                        max_tokens=self.max_tokens,
-                        temperature=self.temperature,
-                        stream=True,
-                    )
-                    return response
+                self.history.append({"role": "user", "content": f"{user_prompt}"}) 
+                print(self.history, "printing general chat prompt")
+                response = openai.ChatCompletion.create(
+                    model=self.model,
+                    messages=self.history,
+                    max_tokens=self.max_tokens,
+                    temperature=self.temperature,
+                    stream=True,
+                )
+                return response 
 
             except openai.error.RateLimitError as e:
+                print(e)
                 self._handle_rate_limit()
-                return self._send_request(CHAT_PROMPT, vectorstore)
+                return self._send_request(vectorstore)
             
             except openai.error.InvalidRequestError as e:
                 if len(prompt) > self.max_tokens:
@@ -65,8 +52,7 @@ class LLMWrapper:
         time.sleep(60) 
 
     def generate_response(self, user_input):
-        conversation = user_input
-        response = self._send_request(conversation)
+        response = self._send_request(user_input)
         return response
 
     def reset_history(self):
@@ -95,10 +81,9 @@ if __name__ == "__main__":
             msg = r["choices"][0]["delta"]["content"]
             response_msg += msg
             print(msg, end="", flush=True)
-        wrapper.history = True
-        vectrstore.data_object.create({
-            "conversation": str({"User": user_input,
-                                 "AI": response_msg}), 
-            "chatIndex": index
-            }, "Chat")
+
+        wrapper.history.append({
+            "role": "user", 
+            "content": response_msg
+        })
         index += 1
