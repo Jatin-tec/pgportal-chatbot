@@ -1,0 +1,76 @@
+{
+    "initial_step": "greeting",
+    "steps": {
+        "greeting": {
+            "message": "Hello! I'm here to assist you explore CPGRAMS portal. What are you interested in?",
+            "options": {
+                "Understanding CPGRAMS": "cpgrams_intro",
+                "Registration Process": "registration_process",
+                "Filing a Grievance": "filing_grievance",
+                "Tracking Your Grievance": "tracking_grievance",
+                "FAQs": "faqs"
+            }
+        },
+        "faqs": {
+            "message": "You are now in FAQ mode. Ask me anything! Type `quit FAQ` to return to the main menu.",
+            "options": {},
+            "use_llm": true
+        },
+        "anything_else": {
+            "message": "Is there anything else I can help you with?",
+            "options": {
+                "Yes": "greeting",
+                "No": "goodbye"
+            }
+        },
+        "goodbye": {
+            "message": "Goodbye! Have a great day."
+        },
+        "cpgrams_intro": {
+            "message": "CPGRAMS is a portal for addressing public grievances...",
+            "options": {
+                "How to register": "registration_process",
+                "How to file a grievance": "filing_grievance"
+            }
+        },
+        "registration_process": {
+            "message": "Here's how you can register on CPGRAMS...",
+            "options": {}
+        },
+        "filing_grievance": {
+            "message": "I'll fill a grievance on your behalf. Briefly describe your grievance.",
+            "input_required": true,
+            "next": "grievance_category"
+        },
+        "grievance_category": {
+            "message": "Please select the category of your grievance.",
+            "options": {
+                "Agriculture": "grievance_subcategory",
+                "Education": "grievance_subcategory",
+                "Health": "grievance_subcategory",
+                "Public Distribution System": "grievance_subcategory",
+                "Public Infrastructure": "grievance_subcategory",
+                "Public Services": "grievance_subcategory",
+                "Social Welfare": "grievance_subcategory",
+                "Other": "grievance_subcategory"
+            },
+            "input_required": true,
+            "next": "confirm_submission"
+        },
+        "confirm_submission": {
+            "message": "Confirm submission of your grievance?",
+            "options": {
+                "Yes, submit it.": "yes",
+                "No, cancel it.": "no"
+            }
+        },
+        "yes": {
+            "message": "Thank you! Your grievance has been submitted.",
+            "next": "anything_else"
+        },
+        "no": {
+            "message": "Your grievance has been cancelled.",
+            "next": "anything_else"
+        }
+    }
+}

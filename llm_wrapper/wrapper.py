@@ -3,7 +3,7 @@ import openai
 import dotenv
 import os
 import weaviate
-from llm_wrapper.prompts.system_prompt import SYSTEM_PROMPT
+from llm_wrapper.prompts.system_prompt import get_system_prompt
 
 class LLMWrapper:
     """Wrapper class for the LLM API."""
@@ -13,13 +13,21 @@ class LLMWrapper:
         self.temperature = temprature
         self.max_try = max_try
         self.history = [
-            {"role": "system", "content": SYSTEM_PROMPT}, 
+            {"role": "system", "content": ""}, 
         ]
 
     def _send_request(self, user_prompt="", vectorstore=None):
         for _ in range(self.max_try):
             try:
                 self.history.append({"role": "user", "content": f"{user_prompt}"}) 
+
+                context = (vectorstore.query.get("FAQ", ["qna"])
+                            .with_near_text({"concepts": [user_prompt]})
+                            .with_limit(5)
+                            ).do()
+
+                self.history[0]["content"] = get_system_prompt(context)
+
                 print(self.history, "printing general chat prompt")
                 response = openai.ChatCompletion.create(
                     model=self.model,
@@ -51,8 +59,8 @@ class LLMWrapper:
         print("Rate limit exceeded. Waiting before retrying...")
         time.sleep(60) 
 
-    def generate_response(self, user_input):
-        response = self._send_request(user_input)
+    def generate_response(self, user_input, vectorstore=None):
+        response = self._send_request(user_input, vectorstore)
         return response
 
     def reset_history(self):

@@ -14,15 +14,19 @@
       href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
       rel="stylesheet"
     />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
+      integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
+      crossorigin="anonymous"
+    ></script>
     <script type="text/javascript" charset="utf-8">
-        var socket = io();
-        socket.on('connect', function() {
-            socket.emit('my event', {data: 'I\'m connected!'});
-        });
-        socket.on('my response', function(msg) {
-            console.log(msg)
-        });
+      var socket = io();
+      socket.on("connect", function () {
+        socket.emit("my event", { data: "I'm connected!" });
+      });
+      socket.on("my response", function (msg) {
+        console.log(msg);
+      });
     </script>
     <script src="../static/main.js"></script>
     <script src="../static/chat.js"></script>
@@ -113,31 +117,10 @@ speaks.
           <p class="p2">The team typically replies in few minutes.</p>
         </div>
         <div class="second-chat">
-          <div class="circle"></div>
-          <p>Hello! I'm here to assist you explore CPGRAMS portal. I can help you with the following:</p>
+          <div class="circle" id="circle-mar"></div>
+          <p class="bot_mssg_box"></p>
           <div class="arrow"></div>
         </div>
-        <div class="second-chat">
-          <div class="circle"></div>
-          <p><strong>Understanding CPGRAMS:</strong> I can explain what CPGRAMS is and its purpose.</p>
-        </div>
-        <div class="second-chat">
-          <div class="circle"></div>
-          <p><strong>Registration Process:</strong> Guide you through the process of registering on the CPGRAMS portal.</p>
-        </div>
-        <div class="second-chat">
-          <div class="circle"></div>
-          <p><strong>Filing a Grievance:</strong> Provide step-by-step instructions on how to file a grievance.</p>
-        </div>
-        <div class="second-chat">
-          <div class="circle"></div>
-          <p><strong>Tracking Your Grievance:</strong> Explain how you can track the status of your filed grievance.</p> 
-        </div>
-        <div class="second-chat">
-          <div class="circle"></div>
-          <p><strong>FAQs:</strong> Answer frequently asked questions related to the grievance filing process.</p>
-        </div>
-
       </div>
       <div class="input-box">
         <div class="surveysparrow">

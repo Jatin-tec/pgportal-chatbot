@@ -12,7 +12,7 @@ client = weaviate.Client(
     }
 )
 
-batch_size = 100
+batch_size = 10000
 class_name = "Organisations"
 class_properties = ['__id', 'orgCode', 'description']
 cursor = None
@@ -22,4 +22,4 @@ query = (
     .with_additional(["id vector"])
     .with_limit(batch_size)
 )
-print(query.do())
+print(len(query.do()["data"]["Get"][class_name]))
