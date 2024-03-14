@@ -73,40 +73,40 @@ client = weaviate.Client(
 #     "vectorIndexType": "hnsw",
 # }
 
-# faq_obj = {
-#     "class": "FAQ",
-#     "vectorizer": "text2vec-huggingface",
-#     "description": "FAQ's",
+faq_obj = {
+    "class": "FAQ",
+    "vectorizer": "text2vec-huggingface",
+    "description": "FAQ's",
 
-#     "moduleConfig": {
-#         "text2vec-huggingface": {
-#             "model": "google/muril-large-cased",
-#             "options": {
-#                 "waitForModel": True
-#             }
-#         }
-#     },
-#     "properties": [
-#         {
-#             "dataType": ["text"],
-#             "description": "Question Answer",
-#             "moduleConfig": {
-#                 "text2vec-huggingface": {
-#                     "vectorizePropertyName": True
-#                 }
-#             },
-#             "name": "qna",
-#         },
-#     ],
-#     "vectorIndexType": "hnsw",
-# }
+    "moduleConfig": {
+        "text2vec-huggingface": {
+            "model": "ai4bharat/IndicBART",
+            "options": {
+                "waitForModel": True
+            }
+        }
+    },
+    "properties": [
+        {
+            "dataType": ["text"],
+            "description": "Question Answer",
+            "moduleConfig": {
+                "text2vec-huggingface": {
+                    "vectorizePropertyName": True
+                }
+            },
+            "name": "qna",
+        },
+    ],
+    "vectorIndexType": "hnsw",
+}
 
-client.schema.create_class(class_obj)
+client.schema.create_class(faq_obj)
 # client.schema.create_class(faq_obj)
 
-data = (client.query.get("Organisations", ["description", "hinDescription"])
-        .with_near_text({"concepts": ["Jatin Kshatriya"]})
-        .with_limit(1)
-        ).do()
+# data = (client.query.get("Organisations", ["description", "hinDescription"])
+#         .with_near_text({"concepts": ["Jatin Kshatriya"]})
+#         .with_limit(1)
+#         ).do()
 
-print(data)
+# print(data)

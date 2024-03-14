@@ -3,6 +3,7 @@ import openai
 import dotenv
 import os
 import weaviate
+import weaviate.classes as wvc
 from llm_wrapper.prompts.system_prompt import get_system_prompt
 
 class LLMWrapper:
@@ -21,10 +22,14 @@ class LLMWrapper:
             try:
                 self.history.append({"role": "user", "content": f"{user_prompt}"}) 
 
-                context = (vectorstore.query.get("FAQ", ["qna"])
-                            .with_near_text({"concepts": [user_prompt]})
-                            .with_limit(5)
-                            ).do()
+                reviews = vectorstore.collections.get("FAQ")
+                
+                context = reviews.query.near_text(
+                    query=user_prompt,
+                    limit=4,
+                    target_vector="qna",  # Specify the target vector for named vector collections
+                    return_metadata=wvc.query.MetadataQuery(distance=True)
+                )
 
                 self.history[0]["content"] = get_system_prompt(context)
 

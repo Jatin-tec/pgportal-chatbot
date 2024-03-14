@@ -5,7 +5,7 @@
             "message": "Hello! I'm here to assist you explore CPGRAMS portal. What are you interested in?",
             "options": {
                 "Understanding CPGRAMS": "cpgrams_intro",
-                "Registration Process": "registration_process",
+                "Registration/Signup Process": "registration_process",
                 "Filing a Grievance": "filing_grievance",
                 "Tracking Your Grievance": "tracking_grievance",
                 "FAQs": "faqs"
@@ -27,10 +27,12 @@
             "message": "Goodbye! Have a great day."
         },
         "cpgrams_intro": {
-            "message": "CPGRAMS is a portal for addressing public grievances...",
+            "message": "Public Grievance Redress Portal, powered by the Department of Administrative Reforms and Public Grievances (DARPG), Government of India, offers you a platform to voice your grievances against any government organization in the country. We're committed to ensuring timely and effective redress of your issues by coordinating with various Ministries, Departments, and State Governments. Leveraging cutting-edge Artificial Intelligence and Machine Learning technologies, developed in collaboration with IIT Kanpur, our Intelligent Grievance Management System (IGMS) enhances the grievance redress process by identifying urgent, spam, and bulk grievances, understanding the core issues, and spotting prevalent topics across grievances. For any queries, comments, or discrepancies, please reach out to us at the contact provided on the portal. Your satisfaction and the resolution of your concerns are our top priority!",
             "options": {
                 "How to register": "registration_process",
-                "How to file a grievance": "filing_grievance"
+                "How to file a grievance": "filing_grievance",
+                "How to track a grievance": "tracking_grievance",
+                "Back to main menu": "greeting"
             }
         },
         "registration_process": {

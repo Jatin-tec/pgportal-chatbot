@@ -16,10 +16,13 @@ openai.api_key = os.getenv("OPENAI_APIKEY")
 socketio = SocketIO(app)
 
 # Weaviate setup
-vectorstore = weaviate.Client("http://localhost:8080",
-        additional_headers={
-            "X-HuggingFace-Api-Key": os.getenv("HUGGINGFACE_APIKEY")
-})
+vectorstore = weaviate.connect_to_local(
+    port=8080,
+    grpc_port=50051,
+    headers={"X-HuggingFace-Api-Key": os.getenv("HUGGINGFACE_APIKEY")},
+    skip_init_checks=True,
+
+)
 
 # MongoDB setup
 client = pymongo.MongoClient(os.getenv("MONGO_URI"))
@@ -98,6 +101,7 @@ def handle_user_message(json, methods=['GET', 'POST']):
             for r in response:
                 if r["choices"][0]["delta"] == {}:
                     break
+                # print(r)
                 msg = r["choices"][0]["delta"]["content"]
                 response_msg += msg
                 socketio.emit('user_response', { "message": msg, "options": None }, room=session_id)
