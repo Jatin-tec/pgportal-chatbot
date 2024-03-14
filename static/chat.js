@@ -72,6 +72,14 @@ socket.on("first_message", function (response) {
     console.log(key);
     const button = document.createElement("button");
     button.innerHTML = key;
+    button.style.margin = "5px";
+    button.style.padding = "5px";
+      button.style.border = "none";
+      button.style.borderRadius = "5px";
+      button.style.backgroundColor = "#7f8ac5";
+      button.style.color = "white";
+
+
     objDiv.scrollTop = objDiv.scrollHeight;
     button.onclick = function () {
       socket.emit("user_message", { "message": option });
@@ -112,8 +120,16 @@ socket.on("user_response", function (response) {
     for (let key in options) {
       const option = options[key];
       console.log(key);
+
       const button = document.createElement("button");
+      
       button.innerHTML = key;
+      button.style.margin = "5px";
+      button.style.padding = "5px";
+      button.style.border = "none";
+      button.style.borderRadius = "5px";
+      button.style.backgroundColor = "#7f8ac5";
+      button.style.color = "white";
       button.onclick = function () {
         socket.emit("user_message", { "message": option });
         const objDiv = document.getElementById("messageBox");
