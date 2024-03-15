@@ -66,7 +66,7 @@ nav #icon {
   margin-top: -80px;
   background: url("./Banner.png") no-repeat center;
   background-size: cover;
-  height: 50rem;    /*  or 39 rem   */
+  height: 100vh;    /*  or 39 rem   */
 }
 /* title */
 
@@ -274,7 +274,7 @@ h1.title {
 .chat-window2 {
   display: none;
   width: 332px;
-  height: 434px;
+  height: 410px;
   border-radius: 10px;
   background-color: #fff;
   padding: 16px;
@@ -323,12 +323,18 @@ h1.title {
 .message-box .second-chat {
   display: inline-block;
 }
+.button-container{
+  margin-left: 30px;
+
+}
 
 .message-box .second-chat .circle {
-  background-color: #4c5aa1;
+  background-image: url(/static/Graident\ Ai\ Robot.jpg);
+  background-size: contain;
   height: 30px;
   width: 30px;
   border-radius: 50%;
+  
   float: left;
   padding: 10px;
   margin-top: 10px;
@@ -381,6 +387,15 @@ h1.title {
   border: none;
   outline: none;
   font-size: 14px;
+}
+.write-reply{
+  margin-top: 15px;
+}
+#send{
+  margin-top: 15px;
+}
+.robo-logo{
+  z-index: 9999;
 }
 .chat-window2 .input-box .send-button {
   float: right;
