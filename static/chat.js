@@ -51,13 +51,13 @@ function userResponse() {
     objDiv.innerHTML += `<div class="second-chat">
         <div class="circle" id="circle-mar"></div>
         <p class="bot_mssg_box"></p>
-        <div class="arrow"></div>
+        <div class="arrow"></div> 
       </div>`;
     objDiv.scrollTop = objDiv.scrollHeight;
     socket.emit("user_message", { "message": userText });
+    console.log(document.getElementById("textInput").value);
   }
 }
-
 socket.on("first_message", function (response) {
   const msg = response["message"];
   const options = response["options"] ? response["options"] : null;
@@ -66,7 +66,7 @@ socket.on("first_message", function (response) {
   const objDiv = document.getElementById("messageBox");
   const last = nodes[nodes.length - 1];
   const html = convertToHTML(msg);
-  last.append(` ${html} `);
+  last.append(`${html}`);
 
   const buttons2 = document.createElement("div");
   for (let key in options) {
@@ -78,6 +78,7 @@ socket.on("first_message", function (response) {
     button.style.padding = "5px";
       button.style.border = "none";
       button.style.borderRadius = "5px";
+      button.classList.add("greive-btn");
       button.style.backgroundColor = "#7f8ac5";
       button.style.color = "white";
       button.style.fontFamily="Montserrat";
@@ -186,6 +187,6 @@ function convertToHTML(text) {
 
   // Wrap the list items in an ordered list
   // const finalHTML = `<li>${html}</li>`;
-  // console.log(finalHTML);
+  console.log(text);
   return text;
 }

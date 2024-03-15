@@ -325,7 +325,9 @@ h1.title {
 }
 .button-container{
   margin-left: 30px;
-
+  margin-right: 35px;
+  display: flex;
+  flex-direction: column;
 }
 
 .message-box .second-chat .circle {
