@@ -2,7 +2,7 @@
     "initial_step": "greeting",
     "steps": {
         "greeting": {
-            "message": "Hello! I'm here to assist you explore CPGRAMS portal. What are you interested in?",
+            "message": "Hello and welcome to the Public Grievance Redressal Portal! We're here to assist you with any concerns or grievances you might have against government organizations across India. Our portal, empowered by advanced technologies, ensures your grievances are addressed promptly and efficiently. Here's how you can navigate our services:",
             "options": {
                 "Understanding CPGRAMS": "cpgrams_intro",
                 "Registration/Signup Process": "registration_process",
@@ -11,23 +11,8 @@
                 "FAQs": "faqs"
             }
         },
-        "faqs": {
-            "message": "You are now in FAQ mode. Ask me anything! Type `quit FAQ` to return to the main menu.",
-            "options": {},
-            "use_llm": true
-        },
-        "anything_else": {
-            "message": "Is there anything else I can help you with?",
-            "options": {
-                "Yes": "greeting",
-                "No": "goodbye"
-            }
-        },
-        "goodbye": {
-            "message": "Goodbye! Have a great day."
-        },
         "cpgrams_intro": {
-            "message": "Public Grievance Redress Portal, powered by the Department of Administrative Reforms and Public Grievances (DARPG), Government of India, offers you a platform to voice your grievances against any government organization in the country. We're committed to ensuring timely and effective redress of your issues by coordinating with various Ministries, Departments, and State Governments. Leveraging cutting-edge Artificial Intelligence and Machine Learning technologies, developed in collaboration with IIT Kanpur, our Intelligent Grievance Management System (IGMS) enhances the grievance redress process by identifying urgent, spam, and bulk grievances, understanding the core issues, and spotting prevalent topics across grievances. For any queries, comments, or discrepancies, please reach out to us at the contact provided on the portal. Your satisfaction and the resolution of your concerns are our top priority!",
+            "message": "The Centralized Public Grievance Redress and Monitoring System (CPGRAMS) is an innovative platform designed to facilitate the filing and tracking of grievances. It leverages the latest in Artificial Intelligence and Machine Learning to streamline the grievance redressal process, ensuring your concerns are addressed effectively and efficiently. Here's how you can get started:",
             "options": {
                 "How to register": "registration_process",
                 "How to file a grievance": "filing_grievance",
@@ -43,6 +28,23 @@
             "message": "I'll fill a grievance on your behalf. Briefly describe your grievance.",
             "input_required": true,
             "next": "grievance_category"
+        },
+        "tracking_grievance": {
+            "message": "Please enter your grievance registration number to track its status.",
+            "input_required": true,
+            "next": "anything_else"
+        },
+        "faqs": {
+            "message": "You are now in FAQ mode. Ask me anything! Type `quit FAQ` to return to the main menu.",
+            "options": {},
+            "use_llm": true
+        },
+        "anything_else": {
+            "message": "Is there anything else I can help you with?",
+            "options": {
+                "Yes": "greeting",
+                "No": "goodbye"
+            }
         },
         "grievance_category": {
             "message": "Please select the category of your grievance.",
@@ -68,11 +70,18 @@
         },
         "yes": {
             "message": "Thank you! Your grievance has been submitted.",
-            "next": "anything_else"
+            "options": {
+                "Back to main menu": "greeting"
+            }   
         },
         "no": {
             "message": "Your grievance has been cancelled.",
-            "next": "anything_else"
+            "options": {
+                "Back to main menu": "greeting"
+            }
+        },
+        "goodbye": {
+            "message": "Goodbye! Have a great day."
         }
     }
 }

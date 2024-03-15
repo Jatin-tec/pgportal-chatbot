@@ -1,112 +1,18 @@
-import os
-import weaviate
-import json
-from dotenv import load_dotenv
+import chromadb.utils.embedding_functions as embedding_functions
+import chromadb
+from utils.embedding import huggingface_ef
 
-load_dotenv()
-huggingface_api_key = os.getenv("HUGGINGFACE_API_KEY")
+chroma_client = chromadb.HttpClient(host='localhost', port=8000)
 
-client = weaviate.Client(
-    url="http://localhost:8080",
-    additional_headers={
-        # Replace with your inference API key
-        "X-HuggingFace-Api-Key": huggingface_api_key
-    }
-)
+class_name = "FAQ"  
+emb_fn = huggingface_ef
 
-# Create Organisations class
-# class_obj = {
-#     "class": "Organisations",
-#     "vectorizer": "text2vec-huggingface",
-#     "description": "Organisation description",
+try:
+    # Create a new collection
+    collection = chroma_client.create_collection(name=class_name, embedding_function=emb_fn)
+    collection = chroma_client.get_collection(name=class_name)
+    print(f"Collection {class_name} created successfully.")
+    print(f"Collection: {collection}")
+except Exception as e:
+    print(f"Failed to create collection {class_name}: {e}")
 
-#     "moduleConfig": {
-#         "text2vec-huggingface": {
-#             "model": "google/muril-large-cased",
-#             "options": {
-#                 "waitForModel": True
-#             }
-#         }
-#     },
-#     "properties": [
-#         {
-#             "dataType": ["text"],
-#             "description": "__id",
-#             "name": "__id",
-#         },
-#         {
-#             "dataType": ["text"],
-#             "description": "Organisation Code",
-#             "name": "orgCode",
-#         },
-#         {
-#             "dataType": ["text"],
-#             "description": "Stage",
-#             "name": "stage",
-#         },
-#         {
-#             "dataType": ["text"],
-#             "description": "Parent id",
-#             "name": "parent_id",
-#         },
-#         {
-#             "dataType": ["text"],
-#             "description": "English Description",
-#             "moduleConfig": {
-#                 "text2vec-huggingface": {
-#                     "vectorizePropertyName": True
-#                 }
-#             },
-#             "name": "description",
-#         },
-#         {
-#             "dataType": ["text"],
-#             "description": "Hindi Description",
-#             "moduleConfig": {
-#                 "text2vec-huggingface": {
-#                     "vectorizePropertyName": True
-#                 }
-#             },
-#             "name": "hinDescription",
-#         },
-#     ],
-#     "vectorIndexType": "hnsw",
-# }
-
-faq_obj = {
-    "class": "FAQ",
-    "vectorizer": "text2vec-huggingface",
-    "description": "FAQ's",
-
-    "moduleConfig": {
-        "text2vec-huggingface": {
-            "model": "ai4bharat/IndicBART",
-            "options": {
-                "waitForModel": True
-            }
-        }
-    },
-    "properties": [
-        {
-            "dataType": ["text"],
-            "description": "Question Answer",
-            "moduleConfig": {
-                "text2vec-huggingface": {
-                    "vectorizePropertyName": True
-                }
-            },
-            "name": "qna",
-        },
-    ],
-    "vectorIndexType": "hnsw",
-}
-
-client.schema.create_class(faq_obj)
-# client.schema.create_class(faq_obj)
-
-# data = (client.query.get("Organisations", ["description", "hinDescription"])
-#         .with_near_text({"concepts": ["Jatin Kshatriya"]})
-#         .with_limit(1)
-#         ).do()
-
-# print(data)

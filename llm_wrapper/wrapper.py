@@ -2,9 +2,8 @@ import time
 import openai
 import dotenv
 import os
-import weaviate
-import weaviate.classes as wvc
 from llm_wrapper.prompts.system_prompt import get_system_prompt
+from database.utils.embedding import huggingface_ef
 
 class LLMWrapper:
     """Wrapper class for the LLM API."""
@@ -22,15 +21,12 @@ class LLMWrapper:
             try:
                 self.history.append({"role": "user", "content": f"{user_prompt}"}) 
 
-                reviews = vectorstore.collections.get("FAQ")
-                
-                context = reviews.query.near_text(
-                    query=user_prompt,
-                    limit=4,
-                    target_vector="qna",  # Specify the target vector for named vector collections
-                    return_metadata=wvc.query.MetadataQuery(distance=True)
+                collection = vectorstore.get_collection(name="FAQ", embedding_function=huggingface_ef)
+                context = collection.query(
+                    query_texts=user_prompt,
+                    n_results=4
                 )
-
+                
                 self.history[0]["content"] = get_system_prompt(context)
 
                 print(self.history, "printing general chat prompt")

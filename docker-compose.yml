@@ -1,29 +1,13 @@
 version: '3.4'
 services:
-  weaviate:
-    command:
-    - --host
-    - 0.0.0.0
-    - --port
-    - '8080'
-    - --scheme
-    - http
-    image: semitechnologies/weaviate:1.23.7
+  chromadb:
+    image: chromadb/chroma
+    container_name: chromadb
     ports:
-    - 8080:8080
-    - 50051:50051
-    restart: on-failure:0
+      - "8000:8000"
     volumes:
-      - weaviate_data:/var/lib/weaviate
-    environment:
-      HUGGINGFACE_APIKEY: $HUGGINGFACE_APIKEY
-      QUERY_DEFAULTS_LIMIT: 25
-      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
-      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
-      DEFAULT_VECTORIZER_MODULE: 'text2vec-huggingface'
-      ENABLE_MODULES: 'text2vec-huggingface'
-      CLUSTER_HOSTNAME: 'node1'
- 
+      - chroma-data:/chroma/chroma
+
   mongodb:
     image: mongo:latest
     container_name: mongodb
@@ -37,4 +21,4 @@ services:
 
 volumes:
   mongodb_data_container:
-  weaviate_data:
+  chroma-data:

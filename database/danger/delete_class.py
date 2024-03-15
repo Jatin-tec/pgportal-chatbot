@@ -1,12 +1,11 @@
-import weaviate
+import chromadb
 
-# Replace with your Weaviate instance URL
-client = weaviate.Client("http://localhost:8080")
+client = chromadb.HttpClient(host='localhost', port=8000)
 
 class_name = "FAQ"  # The name of the class you want to delete
 
 try:
-    client.schema.delete_class(class_name)
+    client.delete_collection(name=class_name)
     print(f"Class '{class_name}' deleted successfully.")
 except Exception as e:
     print(f"Failed to delete class '{class_name}': {e}")

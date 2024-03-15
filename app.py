@@ -2,7 +2,7 @@ from llm_wrapper.wrapper import LLMWrapper
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO
 import pymongo
-import weaviate
+import chromadb
 import openai
 import dotenv
 import json
@@ -16,13 +16,7 @@ openai.api_key = os.getenv("OPENAI_APIKEY")
 socketio = SocketIO(app)
 
 # Weaviate setup
-vectorstore = weaviate.connect_to_local(
-    port=8080,
-    grpc_port=50051,
-    headers={"X-HuggingFace-Api-Key": os.getenv("HUGGINGFACE_APIKEY")},
-    skip_init_checks=True,
-
-)
+vectorstore = chromadb.HttpClient(host='localhost', port=8000)
 
 # MongoDB setup
 client = pymongo.MongoClient(os.getenv("MONGO_URI"))

@@ -1,17 +1,8 @@
-import os
-from dotenv import load_dotenv
-import weaviate
-import re
+import chromadb
+from utils.embedding import huggingface_ef
 
-load_dotenv()
-
-client = weaviate.Client(
-    url="http://localhost:8080",
-    additional_headers={
-        # Replace with your inference API key
-        "X-HuggingFace-Api-Key": os.getenv("HUGGINGFACE_API_KEY")
-    }
-)
+chroma_client = chromadb.HttpClient(host='localhost', port=8000)
+collection = chroma_client.get_collection(name="FAQ", embedding_function=huggingface_ef)
 
 data = ""
 # read data from file
@@ -21,17 +12,18 @@ with open('database/web_data.txt', 'r', encoding='utf-8') as file:
 pairs = data.strip().split("\n\n")
 
 # Print the question-answer pairs
-weaviate_objs = []
-for qa_pair in pairs:
-    weaviate_obj = {
-        "qna": qa_pair
-    }
-    weaviate_objs.append(weaviate_obj)
+collection_object = {
+    "documents": [],
+    "embeddings": [],
+    "ids": []
+}
 
-client.batch.configure(batch_size=10) 
-with client.batch as batch:
-    for data_obj in weaviate_objs:
-        batch.add_data_object(
-            data_obj,
-            "FAQ",
-        )
+for index, pair in enumerate(pairs):
+    collection_object["documents"].append(pair)
+    collection_object["ids"].append(str(index))
+    print(f"Pair {index + 1}: {pair}")
+
+collection.add(
+    documents=collection_object["documents"],
+    ids=collection_object["ids"]
+)
