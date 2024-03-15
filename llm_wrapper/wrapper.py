@@ -73,11 +73,7 @@ if __name__ == "__main__":
     API_TOKEN = os.getenv("HUGGINGFACE_APIKEY")
 
     wrapper = LLMWrapper()
-    vectrstore = weaviate.Client("http://localhost:8080",
-            additional_headers={
-                "X-HuggingFace-Api-Key": API_TOKEN
-    })
-
+    
     index = 0
     while True:
         user_input = input("\nUser: ")    

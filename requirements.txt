@@ -13,3 +13,5 @@ python-socketio==5.11.1
 SQLAlchemy==2.0.27
 websocket-client==1.7.0
 graphlib-backport
+eventlet==0.35.2 
+gunicorn==21.2.0

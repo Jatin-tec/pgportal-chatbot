@@ -5,9 +5,8 @@ networks:
     driver: bridge
 
 services:
-  chromadb:
-    image: chromadb/chroma
-    container_name: chromadb
+  chroma:
+    image: ghcr.io/chroma-core/chroma:latest
     environment:
       - IS_PERSISTENT=TRUE
     ports:
@@ -31,6 +30,7 @@ services:
       - net
 
   flask:
+    restart: always
     build: 
       context: .
       dockerfile: Dockerfile
@@ -41,7 +41,7 @@ services:
       - .env
     depends_on:
       - mongodb
-      - chromadb
+      - chroma
     networks:
       - net
 

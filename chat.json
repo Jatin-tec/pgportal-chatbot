@@ -49,14 +49,6 @@
         "grievance_category": {
             "message": "Please select the category of your grievance.",
             "options": {
-                "Agriculture": "grievance_subcategory",
-                "Education": "grievance_subcategory",
-                "Health": "grievance_subcategory",
-                "Public Distribution System": "grievance_subcategory",
-                "Public Infrastructure": "grievance_subcategory",
-                "Public Services": "grievance_subcategory",
-                "Social Welfare": "grievance_subcategory",
-                "Other": "grievance_subcategory"
             },
             "input_required": true,
             "next": "confirm_submission"
