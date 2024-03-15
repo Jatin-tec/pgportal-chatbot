@@ -10,7 +10,7 @@ import os
 
 dotenv.load_dotenv()
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="templates", static_folder="static")
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 openai.api_key = os.getenv("OPENAI_APIKEY")
 socketio = SocketIO(app)
@@ -25,7 +25,8 @@ grievance_collection = db["grievances"]
 
 @app.route('/')
 def sessions():
-    return render_template('/index.html')
+    # Render the index.html page from base directory
+    return render_template('index.html')
 
 # Placeholder for storing user session data
 user_sessions = {}

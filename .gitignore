@@ -14,5 +14,8 @@ __pycache__
 # database
 weaviate_data
 
-#edior 
+# edior 
 .vscode
+
+# logs
+logs
