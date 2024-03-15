@@ -50,6 +50,7 @@ socketio = SocketIO(app)
 client = pymongo.MongoClient(os.getenv("MONGO_URI"))
 db = client["gov"]
 grievance_collection = db["grievances"]
+departments_collection = db["departments"]
 
 @app.route('/')
 def sessions():
@@ -112,6 +113,7 @@ def handle_user_message(json, methods=['GET', 'POST']):
     session_id = request.sid
     user_message = json["message"]
     print(f"User message: {user_message}")
+    print(f"Session: {user_sessions[session_id]}")
     if user_sessions[session_id].get("use_llm", False):
         if user_message.lower() == 'quit faq':
             # User wants to quit FAQ mode
@@ -153,11 +155,11 @@ def handle_user_message(json, methods=['GET', 'POST']):
             if next_step_key == "grievance_category_1":
                 response_msg, options = option_response_for_grievance_category(session_id, response_msg, user_message)
             elif next_step_key == "grievance_category_2":
-                response_msg, options = option_response_for_grievance_category(session_id, response_msg, user_message=user_sessions[session_id]["filing_grievance_1"], parent_id=user_sessions[session_id]["data"]["grievance_category_1"])            
+                response_msg, options = option_response_for_grievance_category(session_id, response_msg, user_message=user_sessions[session_id]["data"]["filing_grievance"], parent_id=user_sessions[session_id]["data"]["grievance_category_1"])            
             elif next_step_key == "grievance_category_3":
-                response_msg, options = option_response_for_grievance_category(session_id, response_msg, user_sessions[session_id]["filing_grievance_1"], parent_id=user_sessions[session_id]["data"]["grievance_category_2"])
+                response_msg, options = option_response_for_grievance_category(session_id, response_msg, user_message=user_sessions[session_id]["data"]["filing_grievance"], parent_id=user_sessions[session_id]["data"]["grievance_category_2"])
             elif next_step_key == "grievance_category_4":
-                response_msg, options = option_response_for_grievance_category(session_id, response_msg, user_sessions[session_id]["filing_grievance_1"], parent_id=user_sessions[session_id]["data"]["grievance_category_3"])
+                response_msg, options = option_response_for_grievance_category(session_id, response_msg, user_message=user_sessions[session_id]["data"]["filing_grievance"], parent_id=user_sessions[session_id]["data"]["grievance_category_3"])
 
             elif next_step_key == "faqs":
                 user_sessions[session_id]["use_llm"] = True                
@@ -181,9 +183,7 @@ def option_response_for_grievance_category(session_id, response, user_message, s
         results = collection.query(
             query_texts=user_message,
             where={
-                "$and": [
-                    {"parent_id": {"$eq": parent_id}}
-                ]
+                "parent_id": { "$eq": int(parent_id) }
             },
             n_results=10
         )
@@ -192,13 +192,13 @@ def option_response_for_grievance_category(session_id, response, user_message, s
         results = collection.query(
             query_texts=user_message,
             where={
-                "stage": { "$eq": stage }
+                "stage": { "$eq": int(stage) }
             },
             n_results=10
         )
     print(results)
     options = {}
-    if results and results["documents"]:
+    if results and results["documents"] != [[]]:
         for i, result in enumerate(results["documents"][0]):
             options[result] = results["ids"][0][i]
         user_sessions[session_id]["data"][f"filing_grievance_{stage}"] = user_message
