@@ -2,7 +2,7 @@ import chromadb
 
 client = chromadb.HttpClient(host='localhost', port=8000)
 
-class_name = "FAQ"  # The name of the class you want to delete
+class_name = "Departments"  # The name of the class you want to delete
 
 try:
     client.delete_collection(name=class_name)

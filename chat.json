@@ -52,7 +52,7 @@
         "filing_grievance": {
             "message": "I'll fill a grievance on your behalf. Briefly describe your grievance.",
             "input_required": true,
-            "next": "grievance_category"
+            "next": "grievance_category_1"
         },
         "tracking_grievance": {
             "message": "Please enter your grievance registration number to track its status.",
@@ -71,8 +71,29 @@
                 "No": "goodbye"
             }
         },
-        "grievance_category": {
+        "grievance_category_1": {
             "message": "Please select the category of your grievance.",
+            "options": {
+            },
+            "input_required": true,
+            "next": "grievance_category_2"
+        },
+        "grievance_category_2": {
+            "message": "Please select sub category of your previous selection {}.",
+            "options": {
+            },
+            "input_required": true,
+            "next": "grievance_category_3"
+        },
+        "grievance_category_3": {
+            "message": "Please select sub category of your previous selection {}.",
+            "options": {
+            },
+            "input_required": true,
+            "next": "grievance_category_4"
+        },
+        "grievance_category_4": {
+            "message": "Please select sub category of your previous selection {}.",
             "options": {
             },
             "input_required": true,

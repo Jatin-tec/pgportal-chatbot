@@ -150,20 +150,16 @@ def handle_user_message(json, methods=['GET', 'POST']):
             response_msg = next_step['message']
             options = next_step.get('options', None)
             
-            if next_step_key == "grievance_category":
-                
-                collection = vectorstore.get_collection(name="Departments", embedding_function=huggingface_ef)
-                results = collection.query(
-                    query_texts=user_message,
-                    n_results=10
-                )
-                print(results)
-                options = {}
-                if results and results["documents"]:
-                    for i, result in enumerate(results["documents"][0]):
-                        options[result] = results["ids"][0][i]
+            if next_step_key == "grievance_category_1":
+                response_msg, options = option_response_for_grievance_category(session_id, response_msg, user_message)
+            elif next_step_key == "grievance_category_2":
+                response_msg, options = option_response_for_grievance_category(session_id, response_msg, user_message=user_sessions[session_id]["filing_grievance_1"], parent_id=user_sessions[session_id]["data"]["grievance_category_1"])            
+            elif next_step_key == "grievance_category_3":
+                response_msg, options = option_response_for_grievance_category(session_id, response_msg, user_sessions[session_id]["filing_grievance_1"], parent_id=user_sessions[session_id]["data"]["grievance_category_2"])
+            elif next_step_key == "grievance_category_4":
+                response_msg, options = option_response_for_grievance_category(session_id, response_msg, user_sessions[session_id]["filing_grievance_1"], parent_id=user_sessions[session_id]["data"]["grievance_category_3"])
 
-            if next_step_key == "faqs":
+            elif next_step_key == "faqs":
                 user_sessions[session_id]["use_llm"] = True                
             elif next_step_key == "yes":
                 # Save the collected data to MongoDB
@@ -176,3 +172,41 @@ def handle_user_message(json, methods=['GET', 'POST']):
             options = next_step.get('options', None)
             
         socketio.emit('user_response', { "message": response_msg, "options": options }, room=session_id)
+
+def option_response_for_grievance_category(session_id, response, user_message, stage=1, parent_id=None):
+    collection = vectorstore.get_collection(name="Departments", embedding_function=huggingface_ef)
+    
+    if parent_id:
+        print(f"Querying for stage 2 {user_message}, {stage}, {parent_id}")
+        results = collection.query(
+            query_texts=user_message,
+            where={
+                "$and": [
+                    {"parent_id": {"$eq": parent_id}}
+                ]
+            },
+            n_results=10
+        )
+    else:
+        print(f"Querying for stage 1 {user_message}, {stage}, {parent_id}")
+        results = collection.query(
+            query_texts=user_message,
+            where={
+                "stage": { "$eq": stage }
+            },
+            n_results=10
+        )
+    print(results)
+    options = {}
+    if results and results["documents"]:
+        for i, result in enumerate(results["documents"][0]):
+            options[result] = results["ids"][0][i]
+        user_sessions[session_id]["data"][f"filing_grievance_{stage}"] = user_message
+    else:
+        response = "Confirm submission of your grievance?"
+        options = {
+            "Yes, submit it.": "yes",
+            "No, cancel it.": "no"
+        }
+        user_sessions[session_id]["current_step"] = "yes"
+    return response, options

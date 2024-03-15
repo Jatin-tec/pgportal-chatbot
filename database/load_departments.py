@@ -19,7 +19,7 @@ collection = db['departments']
 
 # Fetch all documents from the collection
 documents = collection.find({
-    "stage": 1
+    "parent_id": 2565
 })
 
 # Print the question-answer pairs
@@ -45,5 +45,6 @@ collection = client.get_collection(name="Departments", embedding_function=huggin
 
 collection.add(
     documents=collection_object["documents"],
+    metadatas=collection_object["metadatas"],
     ids=collection_object["ids"]
 )
