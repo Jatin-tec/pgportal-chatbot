@@ -65,8 +65,10 @@ socket.on("first_message", function (response) {
   const nodes = document.querySelectorAll(".bot_mssg_box")
   const objDiv = document.getElementById("messageBox");
   const last = nodes[nodes.length - 1];
-  last.append(` ${msg} `);
+  const html = convertToHTML(msg);
+  last.append(` ${html} `);
 
+  const buttons2 = document.createElement("div");
   for (let key in options) {
     const option = options[key];
     console.log(key);
@@ -78,6 +80,7 @@ socket.on("first_message", function (response) {
       button.style.borderRadius = "5px";
       button.style.backgroundColor = "#7f8ac5";
       button.style.color = "white";
+      button.style.fontFamily="Montserrat";
 
 
     objDiv.scrollTop = objDiv.scrollHeight;
@@ -96,8 +99,10 @@ socket.on("first_message", function (response) {
     </div>`;
       objDiv.scrollTop = objDiv.scrollHeight;
     }
-    document.getElementById("messageBox").appendChild(button);
+    buttons2.appendChild(button);
   }
+  buttons2.classList.add("button-container");
+  document.getElementById("messageBox").appendChild(buttons2);
 
   const audio3 = new Audio(
     "https://downloadwap.com/content2/mp3-ringtones/tone/2020/alert/preview/56de9c2d5169679.mp3"
@@ -116,6 +121,7 @@ socket.on("user_response", function (response) {
   const last = nodes[nodes.length - 1];
   last.append(` ${msg} `);
 
+  const buttons = document.createElement("div");
   if (options) {
     for (let key in options) {
       const option = options[key];
@@ -130,6 +136,7 @@ socket.on("user_response", function (response) {
       button.style.borderRadius = "5px";
       button.style.backgroundColor = "#7f8ac5";
       button.style.color = "white";
+      button.style.fontFamily="Montserrat";
       button.onclick = function () {
         socket.emit("user_message", { "message": option });
         const objDiv = document.getElementById("messageBox");
@@ -145,15 +152,16 @@ socket.on("user_response", function (response) {
       </div>`;
         objDiv.scrollTop = objDiv.scrollHeight;
       }
-      document.getElementById("messageBox").appendChild(button);
+      buttons.appendChild(button);
     }
+    buttons.classList.add("button-container");
+    document.getElementById("messageBox").appendChild(buttons);
   }
-
-  const audio3 = new Audio(
-    "https://downloadwap.com/content2/mp3-ringtones/tone/2020/alert/preview/56de9c2d5169679.mp3"
-  );
-  audio3.load();
-  audio3.play();
+  // const audio3 = new Audio(
+  //   "https://downloadwap.com/content2/mp3-ringtones/tone/2020/alert/preview/56de9c2d5169679.mp3"
+  // );
+  // audio3.load();
+  // audio3.play();
   const objDiv = document.getElementById("messageBox");
   objDiv.scrollTop = objDiv.scrollHeight;
 });
@@ -168,3 +176,16 @@ addEventListener("keypress", (e) => {
     }
   }
 });
+
+function convertToHTML(text) {
+  // Regular expression to match each step
+  // const regex = /\d+\s*\.\s*(.*)/g;
+  
+  // Replace each match with HTML list item
+  // const html = text.replace(regex, '<li>$1</li>');
+
+  // Wrap the list items in an ordered list
+  // const finalHTML = `<li>${html}</li>`;
+  // console.log(finalHTML);
+  return text;
+}
