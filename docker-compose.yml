@@ -1,12 +1,21 @@
 version: '3.4'
+
+networks:
+  net:
+    driver: bridge
+
 services:
   chromadb:
     image: chromadb/chroma
     container_name: chromadb
+    environment:
+      - IS_PERSISTENT=TRUE
     ports:
       - "8000:8000"
     volumes:
       - chroma-data:/chroma/chroma
+    networks:
+      - net
 
   mongodb:
     image: mongo:latest
@@ -18,8 +27,25 @@ services:
       - "27017:27017"
     volumes:
       - mongodb_data_container:/data/db
+    networks:
+      - net
 
+  flask:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: flask-server
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    depends_on:
+      - mongodb
+      - chromadb
+    networks:
+      - net
 
 volumes:
   mongodb_data_container:
   chroma-data:
+    driver: local

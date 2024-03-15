@@ -16,7 +16,7 @@ openai.api_key = os.getenv("OPENAI_APIKEY")
 socketio = SocketIO(app)
 
 # Weaviate setup
-vectorstore = chromadb.HttpClient(host='localhost', port=8000)
+vectorstore = chromadb.HttpClient(host='chromadb', port=8000)
 
 # MongoDB setup
 client = pymongo.MongoClient(os.getenv("MONGO_URI"))
@@ -56,7 +56,12 @@ def get_next_step(session_id, user_input):
 @socketio.on('connect')
 def handle_connect():
     session_id = request.sid
-    user_sessions[session_id] = {"current_step": conversation_data["initial_step"], "data": {}}
+    wrapper = LLMWrapper()
+    user_sessions[session_id] = {
+        "current_step": conversation_data["initial_step"], 
+        "data": {},
+        "wrapper": wrapper,
+        }
     print(f"User connected: {session_id}")
 
 @socketio.on('start_conversation')
@@ -90,7 +95,7 @@ def handle_user_message(json, methods=['GET', 'POST']):
             options = next_step.get('options', None)
         else:   
             # Use LLM to generate response
-            wrapper = LLMWrapper()
+            wrapper = user_sessions[session_id]["wrapper"]
             response = wrapper.generate_response(user_message, vectorstore)
             response_msg = ""
             for r in response:
