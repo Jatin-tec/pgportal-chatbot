@@ -82,6 +82,12 @@ socket.on("first_message", function (response) {
       button.style.backgroundColor = "#7f8ac5";
       button.style.color = "white";
       button.style.fontFamily="Montserrat";
+      button.addEventListener('mouseover', () => {
+        button.style.backgroundColor = '#4c5aa1';
+      });
+      button.addEventListener('mouseout', () => {
+        button.style.backgroundColor = '#7f8ac5';
+      });
 
 
     objDiv.scrollTop = objDiv.scrollHeight;
@@ -138,6 +144,12 @@ socket.on("user_response", function (response) {
       button.style.backgroundColor = "#7f8ac5";
       button.style.color = "white";
       button.style.fontFamily="Montserrat";
+      button.addEventListener('mouseover', () => {
+        button.style.backgroundColor = '#4c5aa1';
+      });
+      button.addEventListener('mouseout', () => {
+        button.style.backgroundColor = '#7f8ac5';
+      });
       button.onclick = function () {
         socket.emit("user_message", { "message": option });
         const objDiv = document.getElementById("messageBox");
