@@ -21,9 +21,34 @@
             }
         },
         "registration_process": {
-            "message": "Here's how you can register on CPGRAMS...",
-            "options": {}
+            "message": "Let's get you registered on CPGRAMS. Please provide your firstname",
+            "options": {},
+            "input_required": true,
+            "next": "registration_lastname"
         },
+        
+        "registration_lastname": {
+            "message": "Please enter your last name:",
+            "input_required": true,
+            "next": "registration_email"
+        },
+        "registration_email": {
+            "message": "Please enter your email address:",
+            "input_required": true,
+            "next": "registration_contact"
+        },
+        "registration_contact": {
+            "message": "Please enter your contact number:",
+            "input_required": true,
+            "next": "registration_complete"
+        },
+        "registration_complete": {
+            "message": "Thank you for providing your details. Your registration is now complete. You can now proceed to file a grievance or explore other services.",
+            "options": {
+                "Back to main menu": "greeting"
+            }
+        },
+        
         "filing_grievance": {
             "message": "I'll fill a grievance on your behalf. Briefly describe your grievance.",
             "input_required": true,
