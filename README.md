@@ -70,3 +70,4 @@ Before you begin, ensure you have met the following requirements:
     ```bash 
     bash setup.sh
     ```
+    Note: Grievance and action history data must be uploded in mongodb connection_uri: `mongodb://rootuser:rootpass@localhost:27017/?authSource=admin`
