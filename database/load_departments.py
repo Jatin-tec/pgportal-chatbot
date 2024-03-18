@@ -18,8 +18,11 @@ db = client[database_name]
 collection = db['departments']
 
 # Fetch all documents from the collection
+# documents = collection.find({
+#     "parent_id": 2565
+# })
 documents = collection.find({
-    "parent_id": 2565
+    "stage": 1
 })
 
 # Print the question-answer pairs
@@ -31,12 +34,20 @@ collection_object = {
 }
 for document in documents:
     collection_object["documents"].append(document["description"])
-    collection_object["metadatas"].append({
-        "orgCode": document["orgCode"],
-        "stage": document["stage"],
-        "parent_id": document["parent_id"],
-        "hinDescription": document["descriptionHindi"]
-    })
+    try:
+        collection_object["metadatas"].append({
+            "orgCode": document["orgCode"],
+            "stage": int(document["stage"]),
+            "parent_id": int(document["parent_id"]),
+            "hinDescription": document["descriptionHindi"]
+        })
+    except:
+        collection_object["metadatas"].append({
+            "orgCode": document["orgCode"],
+            "stage": int(document["stage"]),
+            "parent_id": 0,
+            "hinDescription": document["descriptionHindi"]
+        })
     collection_object["ids"].append(str(document["_id"]))
     print(f"Department {document['_id']}: {document['_id']}")
 
